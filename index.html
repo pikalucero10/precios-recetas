@@ -1,0 +1,336 @@
+<html><head><base href="https://websim.creation.engine/recipe-calculator-improved-design/" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Precios para Pizza - Diseño Mejorado</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-color: #FF6B6B;
+    --secondary-color: #4ECDC4;
+    --bg-color: #F7FFF7;
+    --text-color: #2C3E50;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+  }
+  
+  h1, h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    font-weight: 600;
+  }
+  
+  h2 {
+    font-size: 1.8em;
+    font-weight: 400;
+  }
+  
+  .ingredient-form {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  input, select, button {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    flex-grow: 1;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    font-weight: 600;
+  }
+  
+  button:hover {
+    background-color: #FF8E8E;
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
+  
+  #ingredientList, #recipeList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  #ingredientList li, #recipeList li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  #ingredientList li:hover, #recipeList li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-color);
+  }
+  
+  .total {
+    font-weight: bold;
+    text-align: right;
+    margin-top: 30px;
+    font-size: 1.2em;
+    color: var(--primary-color);
+  }
+  
+  .pizza-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    display: block;
+  }
+  
+  .columns {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .column {
+    flex: 1;
+  }
+  
+  .unit-select {
+    width: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .columns {
+      flex-direction: column;
+    }
+    
+    .ingredient-form {
+      flex-direction: column;
+    }
+    
+    input, select, button {
+      width: 100%;
+    }
+  }
+  
+  /* Animation for adding items */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  #ingredientList li, #recipeList li {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <svg class="pizza-icon" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="#FFA500"/>
+      <circle cx="50" cy="50" r="40" fill="#FF6347"/>
+      <circle cx="30" cy="35" r="5" fill="#FFF"/>
+      <circle cx="70" cy="35" r="5" fill="#FFF"/>
+      <circle cx="50" cy="70" r="5" fill="#FFF"/>
+      <path d="M20 50 L80 50" stroke="#FFF" stroke-width="2"/>
+    </svg>
+    <h1>Calculadora de Precios para Pizza</h1>
+    <div class="columns">
+      <div class="column">
+        <h2>Ingredientes Comprados</h2>
+        <div class="ingredient-form">
+          <input type="text" id="ingredientName" placeholder="Nombre del ingrediente">
+          <input type="number" id="ingredientPrice" placeholder="Precio total">
+          <input type="number" id="ingredientQuantity" placeholder="Cantidad comprada">
+          <select id="ingredientUnit" class="unit-select">
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="ml">ml</option>
+          </select>
+          <button onclick="addIngredient()">Agregar Ingrediente</button>
+        </div>
+        <ul id="ingredientList"></ul>
+      </div>
+      <div class="column">
+        <h2>Receta</h2>
+        <div class="ingredient-form">
+          <select id="recipeIngredient">
+            <option value="">Seleccione un ingrediente</option>
+          </select>
+          <input type="number" id="recipeQuantity" placeholder="Cantidad para la receta">
+          <select id="recipeUnit" class="unit-select">
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="ml">ml</option>
+          </select>
+          <button onclick="addToRecipe()">Agregar a la Receta</button>
+        </div>
+        <ul id="recipeList"></ul>
+        <div class="total">Costo Total de la Receta: $<span id="totalPrice">0.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let ingredients = [];
+    let recipe = [];
+
+    function convertToGrams(quantity, unit) {
+      if (unit === 'kg') return quantity * 1000;
+      if (unit === 'ml') return quantity; // Asumimos que 1ml = 1g para simplificar
+      return quantity;
+    }
+
+    function addIngredient() {
+      const name = document.getElementById('ingredientName').value;
+      const price = parseFloat(document.getElementById('ingredientPrice').value);
+      const quantity = parseFloat(document.getElementById('ingredientQuantity').value);
+      const unit = document.getElementById('ingredientUnit').value;
+
+      if (name && !isNaN(price) && !isNaN(quantity)) {
+        const quantityInGrams = convertToGrams(quantity, unit);
+        ingredients.push({ 
+          name, 
+          price, 
+          quantity, 
+          unit, 
+          quantityInGrams, 
+          pricePerGram: price / quantityInGrams 
+        });
+        updateIngredientList();
+        updateRecipeSelect();
+        clearInputs('ingredient');
+      } else {
+        alert('Por favor, ingrese todos los campos correctamente.');
+      }
+    }
+
+    function updateIngredientList() {
+      const list = document.getElementById('ingredientList');
+      list.innerHTML = '';
+      ingredients.forEach((ingredient, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${ingredient.name}: $${ingredient.price.toFixed(2)} por ${ingredient.quantity}${ingredient.unit}
+          (${ingredient.pricePerGram.toFixed(4)}$/g)</span>
+          <button onclick="removeIngredient(${index})">Eliminar</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function updateRecipeSelect() {
+      const select = document.getElementById('recipeIngredient');
+      select.innerHTML = '<option value="">Seleccione un ingrediente</option>';
+      ingredients.forEach((ingredient, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = ingredient.name;
+        select.appendChild(option);
+      });
+    }
+
+    function removeIngredient(index) {
+      ingredients.splice(index, 1);
+      updateIngredientList();
+      updateRecipeSelect();
+      updateRecipeList();
+      calculateTotal();
+    }
+
+    function addToRecipe() {
+      const ingredientIndex = document.getElementById('recipeIngredient').value;
+      const quantity = parseFloat(document.getElementById('recipeQuantity').value);
+      const unit = document.getElementById('recipeUnit').value;
+
+      if (ingredientIndex !== '' && !isNaN(quantity)) {
+        const ingredient = ingredients[ingredientIndex];
+        const recipeQuantityInGrams = convertToGrams(quantity, unit);
+        recipe.push({ 
+          ...ingredient, 
+          recipeQuantity: quantity, 
+          recipeUnit: unit, 
+          recipeQuantityInGrams 
+        });
+        updateRecipeList();
+        calculateTotal();
+        clearInputs('recipe');
+      } else {
+        alert('Por favor, seleccione un ingrediente y especifique la cantidad.');
+      }
+    }
+
+    function updateRecipeList() {
+      const list = document.getElementById('recipeList');
+      list.innerHTML = '';
+      recipe.forEach((item, index) => {
+        const li = document.createElement('li');
+        const cost = item.pricePerGram * item.recipeQuantityInGrams;
+        li.innerHTML = `
+          <span>${item.name}: ${item.recipeQuantity}${item.recipeUnit} - $${cost.toFixed(2)}</span>
+          <button onclick="removeFromRecipe(${index})">Eliminar</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function removeFromRecipe(index) {
+      recipe.splice(index, 1);
+      updateRecipeList();
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      const total = recipe.reduce((sum, item) => sum + (item.pricePerGram * item.recipeQuantityInGrams), 0);
+      document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+
+    function clearInputs(type) {
+      if (type === 'ingredient') {
+        document.getElementById('ingredientName').value = '';
+        document.getElementById('ingredientPrice').value = '';
+        document.getElementById('ingredientQuantity').value = '';
+        document.getElementById('ingredientUnit').value = 'g';
+      } else if (type === 'recipe') {
+        document.getElementById('recipeIngredient').value = '';
+        document.getElementById('recipeQuantity').value = '';
+        document.getElementById('recipeUnit').value = 'g';
+      }
+    }
+  </script>
+</body>
+</html>
